@@ -76,6 +76,8 @@ app.post('/usuarios/login', (req, res) => {
     });
 });
 
+// Ruta para actualizar foto de perfil app.put('/usuarios/foto', (req, res) => { const { email, foto_perfil } = req.body; db.query('UPDATE usuarios SET foto_perfil = ? WHERE email = ?', [foto_perfil, email], (err) => { if (err) return res.status(500).json(err); res.json({ message: 'Foto actualizada' }); }); });
+
 // 4. ARRANCAR
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Servidor en puerto ${PORT}`));
