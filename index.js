@@ -55,6 +55,27 @@ app.post('/usuarios/registro', (req, res) => {
     });
 });
 
+// RUTA PARA INICIAR SESIÓN (LOGIN)
+app.post('/usuarios/login', (req, res) => {
+    const { email, password } = req.body;
+    
+    // Buscamos al usuario que coincida con email Y password
+    db.query('SELECT * FROM usuarios WHERE email = ? AND password = ?', [email, password], (err, results) => {
+        if (err) {
+            console.error('Error en Login:', err);
+            return res.status(500).json({ message: 'Error en el servidor' });
+        }
+        
+        if (results.length > 0) {
+            // ¡Usuario encontrado!
+            res.status(200).json(results[0]);
+        } else {
+            // No coincide nada
+            res.status(401).json({ message: 'Correo o contraseña incorrectos' });
+        }
+    });
+});
+
 // 4. ARRANCAR
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Servidor en puerto ${PORT}`));
