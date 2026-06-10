@@ -6,25 +6,25 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// CONFIGURACIÓN DE TU AIVEN MYSQL (Copia de la consola de Aiven)
 const db = mysql.createConnection({
-    host: 'TU_HOST_DE_AIVEN', 
-    port: 16773, 
+    host: 'mysql-168ef84a-christopher06062008-cb96.e.aivencloud.com',
+    port: 16771,
     user: 'avnadmin',
-    password: 'TU_PASSWORD_DE_AIVEN',
+    password: process.env.DB_PASSWORD, 
     database: 'defaultdb',
     ssl: { rejectUnauthorized: false }
 });
 
 db.connect(err => {
-    if (err) console.error('Error conectando a MySQL:', err);
-    else console.log('Conectado a Aiven MySQL');
+    if (err) {
+        console.error('Error conectando a MySQL:', err);
+    } else {
+        console.log('¡Conectado exitosamente a Aiven MySQL! 🚀');
+    }
 });
 
-// Ruta de prueba
 app.get('/', (req, res) => res.send('Servidor TMCOOPS funcionando 🚀'));
 
-// Obtener usuarios
 app.get('/usuarios', (req, res) => {
     db.query('SELECT * FROM usuarios', (err, results) => {
         if (err) return res.status(500).json(err);
@@ -32,7 +32,6 @@ app.get('/usuarios', (req, res) => {
     });
 });
 
-// Registrar usuario
 app.post('/usuarios/registro', (req, res) => {
     const { nombre, email } = req.body;
     db.query('INSERT INTO usuarios (nombre, email) VALUES (?, ?)', [nombre, email], (err) => {
@@ -41,5 +40,5 @@ app.post('/usuarios/registro', (req, res) => {
     });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Servidor en puerto ${PORT}`));
